@@ -4,45 +4,21 @@
 react + react-router + redux + immutable + less + ES6/7 + webpack + fetch
 
 
-## 下载
+## 运行项目（nodejs 6.0+）
 
- 	git clone https://github.com/bailicangdu/pxq.git
-
- 	cd pxq
-
- 	npm install
-
-
-## 运行（nodejs 6.0+）
 ```
- npm run dev (正常编译模式)
+ git clone https://github.com/bailicangdu/react-pxq.git
 
- npm run hot (热替换编译模式)
+ cd react-pxq
+
+ npm install
+  
+ npm run dev (正常编译模式) 或 npm run hot (热替换编译模式) 二选其一
 
  访问 http://localhost:8088
 
- npm run dist （发布生产版本，对代码进行混淆压缩，提取公共代码，分离css文件）
+ npm run dist （发布）
 ```
-
-## 2016年10月26日
-```
-初次提交
-```
-
-## 2016年11月14日
-```
-新增热替换功能
-```
-## 2016年11月16日
-```
-添加immutable.js的使用，减少组件不必要的更新，优化性能
-```
-## 2017年1月10日
-```
-1、修复热替换无法正常使用的问题，使用 react-hot-loader 代替 react-transform
-2、热替换模式下使用 http-proxy-middleware 反向代理解决跨域问题
-```
-
 
 
 ## 说明
@@ -63,7 +39,8 @@ react + react-router + redux + immutable + less + ES6/7 + webpack + fetch
 
 
 ## 演示
-[demo](http://dev.fe.ptdev.cn/pxq/)（请用chrome的手机模式预览）
+
+[查看演示效果](http://cangdu.org/pxq/)（请用chrome的手机模式预览）
 
 ### 移动端扫描下方二维码
 ![](https://github.com/bailicangdu/pxq/blob/master/src/images/demo.png)
@@ -284,7 +261,7 @@ const reducer = combineReducers({
 **combineReducers:**
 >其实它也是一个reducer，它接受整个state和一个action，然后将整个state拆分发送给对应的reducer进行处理，所有的reducer会收到相同的action，不过它们会根据action的type进行判断，有这个type就进行处理然后返回新的state，没有就返回默认值，然后这些分散的state又会整合在一起返回一个新的state树。
 
-接下来分析一下整体的流程，首先调用store.dispatch将action作为参数传入，同时用getState获取当前的状态树state并注册subscribe的listener监听state变化，再调用combineReducers并将获取的state和action传入。combineReducers会将传入的state和action传给所有reducer，reducer会根据state的key值获取与自己对应的state，并根据action的type返回新的state，触发state树的更新，我们调用subscribe监听到state发生变化后用getState获取新的state数据。
+接下来分析一下整体的流程，首先调用store.dispatch将action作为参数传入，同时用getState获取当前的状态树state并注册subscribe的listener监听state变化，再调用combineReducers并将获取的state和action传入。combineReducers会将传入的state和action传给所有reducer，并根据action的type返回新的state，触发state树的更新，我们调用subscribe监听到state发生变化后用getState获取新的state数据。
 
 redux的state和react的state两者完全没有关系，除了名字一样。
 
@@ -303,7 +280,7 @@ store的三大功能：dispatch，subscribe，getState都不需要手动来写�
 
 **Provider**是一个组件，它接受store作为props，然后通过context往下传，这样react中任何组件都可以通过context获取store。也就意味着我们可以在任何一个组件里利用dispatch(action)来触发reducer改变state，并用subscribe监听state的变化，然后用getState获取变化后的值。但是并不推荐这样做，它会让数据流变的混乱，过度的耦合也会影响组件的复用，维护起来也更麻烦。
 
-**connect --connect(mapStateToProps, mapDispatchToProps, mergeProps, options)**是一个函数，它接受四个参数并且再返回一个函数--wrapWithConnect，wrapWithConnect接受一个组件作为参数wrapWithConnect(component)，它内部定义一个新组件Connect(容器组件)并将传入的组件(ui组件)作为Connect的子组件然后return出去。
+__connect --connect(mapStateToProps, mapDispatchToProps, mergeProps, options)__ 是一个函数，它接受四个参数并且再返回一个函数--wrapWithConnect，wrapWithConnect接受一个组件作为参数wrapWithConnect(component)，它内部定义一个新组件Connect(容器组件)并将传入的组件(ui组件)作为Connect的子组件然后return出去。
 
 所以它的完整写法是这样的：connect(mapStateToProps, mapDispatchToProps, mergeProps, options)(component)
 
